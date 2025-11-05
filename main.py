@@ -66,7 +66,6 @@ def serve_video(filename):
     """
     return send_from_directory(VIDEO_FOLDER, filename)
 
-# ✅ AGORA ESTA FUNÇÃO ESTÁ FORA DAS OUTRAS (CORRETO)
 @app.route("/media/upload", methods=["POST"])
 def upload_video():
     """
@@ -104,6 +103,34 @@ def upload_video():
         "url": f"{request.url_root}media/video/{file.filename}"
     }), 200
 
+# 🔹 Nova rota para deletar vídeos
+@app.route("/media/video/<path:filename>", methods=["DELETE"])
+def delete_video(filename):
+    """
+    Deleta um vídeo específico do servidor
+    ---
+    parameters:
+      - name: filename
+        in: path
+        type: string
+        required: true
+        description: Nome do arquivo de vídeo a ser deletado
+    responses:
+      200:
+        description: Vídeo deletado com sucesso
+      404:
+        description: Arquivo não encontrado
+    """
+    filepath = os.path.join(VIDEO_FOLDER, filename)
+
+    if not os.path.exists(filepath):
+        return jsonify({"error": "Arquivo não encontrado"}), 404
+
+    try:
+        os.remove(filepath)
+        return jsonify({"message": f"Vídeo '{filename}' deletado com sucesso!"}), 200
+    except Exception as e:
+        return jsonify({"error": f"Falha ao deletar o vídeo: {str(e)}"}), 500
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=8080)
