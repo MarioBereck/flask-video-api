@@ -55,7 +55,7 @@ def list_videos():
         os.makedirs(VIDEO_FOLDER)
 
     for filename in os.listdir(VIDEO_FOLDER):
-        if filename.lower().endswith((".mp4", ".mov", ".avi", ".mkv")):
+        if filename.lower().endswith((".mp4", "mp3", ".mov", ".avi", ".mkv")):
             videos.append({
                 "name": filename,
                 # usa a URL dinâmica baseada no domínio atual
